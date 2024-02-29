@@ -101,6 +101,7 @@ func TestUpgrade(t *testing.T) {
 		config.WithAutoInstrumentationApacheHttpdImage("apache-httpd:2"),
 		config.WithAutoInstrumentationNginxImage("nginx:2"),
 		config.WithEnableApacheHttpdInstrumentation(true),
+		config.WithEnableDotnetInstrumentation(true),
 	)
 	up := NewInstrumentationUpgrade(k8sClient, ctrl.Log.WithName("instrumentation-upgrade"), &record.FakeRecorder{}, cfg)
 

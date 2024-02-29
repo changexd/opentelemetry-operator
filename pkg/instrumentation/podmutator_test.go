@@ -37,6 +37,10 @@ func TestMutatePod(t *testing.T) {
 	true := true
 	zero := int64(0)
 
+	defaultConfig := config.New(
+		config.WithEnableDotnetInstrumentation(true),
+	)
+
 	tests := []struct {
 		name            string
 		err             string
@@ -1811,6 +1815,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
+			config: defaultConfig,
 		},
 		{
 			name: "dotnet injection, by namespace annotations",
@@ -1990,6 +1995,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
+			config: defaultConfig,
 		},
 		{
 			name: "dotnet injection multiple containers, true",
@@ -2265,6 +2271,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
+			config: defaultConfig,
 		},
 		{
 			name: "dotnet injection feature gate disabled",
@@ -2343,13 +2350,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			setFeatureGates: func(t *testing.T) {
-				originalVal := featuregate.EnableDotnetAutoInstrumentationSupport.IsEnabled()
-				require.NoError(t, colfeaturegate.GlobalRegistry().Set(featuregate.EnableDotnetAutoInstrumentationSupport.ID(), false))
-				t.Cleanup(func() {
-					require.NoError(t, colfeaturegate.GlobalRegistry().Set(featuregate.EnableDotnetAutoInstrumentationSupport.ID(), originalVal))
-				})
-			},
+			config: config.New(config.WithEnableDotnetInstrumentation(false)),
 		},
 		{
 			name: "go injection, true",
@@ -4657,7 +4658,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: config.New(config.WithEnableMultiInstrumentation(false)),
+			config: config.New(config.WithEnableMultiInstrumentation(false), config.WithEnableDotnetInstrumentation(true)),
 		},
 		{
 			name: "multi instrumentation feature gate enabled, multiple instrumentation annotations set, no containers",
@@ -4980,7 +4981,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: config.New(config.WithEnableMultiInstrumentation(true)),
+			config: config.New(config.WithEnableMultiInstrumentation(true), config.WithEnableDotnetInstrumentation(true)),
 		},
 		{
 			name: "multi instrumentation feature gate disabled, instrumentation feature gate disabled and annotation set, multiple specific containers set",
@@ -5080,14 +5081,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: config.New(config.WithEnableMultiInstrumentation(true)),
-			setFeatureGates: func(t *testing.T) {
-				originalValDotNetInstr := featuregate.EnableDotnetAutoInstrumentationSupport.IsEnabled()
-				require.NoError(t, colfeaturegate.GlobalRegistry().Set(featuregate.EnableDotnetAutoInstrumentationSupport.ID(), false))
-				t.Cleanup(func() {
-					require.NoError(t, colfeaturegate.GlobalRegistry().Set(featuregate.EnableDotnetAutoInstrumentationSupport.ID(), originalValDotNetInstr))
-				})
-			},
+			config: config.New(config.WithEnableMultiInstrumentation(true), config.WithEnableDotnetInstrumentation(false)),
 		},
 	}
 
