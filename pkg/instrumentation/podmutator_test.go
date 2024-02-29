@@ -37,10 +37,6 @@ func TestMutatePod(t *testing.T) {
 	true := true
 	zero := int64(0)
 
-	defaultConfig := config.New(
-		config.WithEnableDotnetInstrumentation(true),
-	)
-
 	tests := []struct {
 		name            string
 		err             string
@@ -1815,7 +1811,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: defaultConfig,
+			config: config.New(config.WithEnableDotnetInstrumentation(true)),
 		},
 		{
 			name: "dotnet injection, by namespace annotations",
@@ -1995,7 +1991,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: defaultConfig,
+			config: config.New(config.WithEnableDotnetInstrumentation(true)),
 		},
 		{
 			name: "dotnet injection multiple containers, true",
@@ -2271,7 +2267,7 @@ func TestMutatePod(t *testing.T) {
 					},
 				},
 			},
-			config: defaultConfig,
+			config: config.New(config.WithEnableDotnetInstrumentation(true)),
 		},
 		{
 			name: "dotnet injection feature gate disabled",
